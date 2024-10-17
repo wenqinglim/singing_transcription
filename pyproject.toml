@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "singing_transcription"
+version = "0.1.0"
+description = ""
+authors = ["wenqinglim <lim_wenq@hotmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+torch = "^2.5.0"
+torchaudio = "^2.5.0"
+torchmetrics = "^1.4.3"
+tqdm = "^4.66.5"
+pandas = "^2.2.3"
+seaborn = "^0.13.2"
+librosa = "^0.10.2.post1"
+scipy = "^1.14.1"
+jupyterlab = "^4.2.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

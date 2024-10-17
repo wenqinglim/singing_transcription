@@ -1,5 +1,11 @@
 # Two-vocal Separation and Singing Pitch Transcription
 
+## Set Up:
+1. Install dependencies using Poetry: `poetry install`
+2. Download the dataset MIR-1K
+3. Run scripts `poetry run src/xyz.py`
+
+
 ## File Descriptions:
 Training scripts:
 - `convtasnet.ipynb`: Evaluate pre-trained Conv-TasNet model for vocal sepration
@@ -13,7 +19,18 @@ Pipeline:
 Artifacts:
 - `best_crepe_xx.pkl`: Stores best trained CREPE model for each model size
 - `leon_7_jmzen_5.wav`: mixed track used for case study
-- `gbqq_lwq_mixed.wav`: mixed track by me to test in-sync vocals 
+- `gbqq_lwq_mixed.wav`: mixed track by me (lol) to test in-sync vocals 
 
 Others:
 - `analyze_pitch_labels`: initial analysis on distribution of pitches in dataset
+
+## TO-DOs
+- [x] Setup Poetry
+- [x] Move from notebook to script
+- [ ] Test individual scripts in `src/`
+- [ ] Get intermediate audio samples for writeup post
+- [ ] Create e2e pipeline
+- [ ] Host model(s) on HF
+- [ ] Add gradio on HF Spaces hehe
+
+
