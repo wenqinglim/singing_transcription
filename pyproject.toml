@@ -16,6 +16,7 @@ seaborn = "^0.13.2"
 librosa = "^0.10.2.post1"
 scipy = "^1.14.1"
 jupyterlab = "^4.2.5"
+huggingface-hub = "^0.25.2"
 
 
 [build-system]

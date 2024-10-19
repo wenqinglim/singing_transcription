@@ -9,7 +9,7 @@
 `poetry run src/source_sep.py`
 
 ### Pitch Transcription
-`poetry run src/pitch_transcription.py`
+`poetry run src/train_pitch_transcription.py`
 
 
 

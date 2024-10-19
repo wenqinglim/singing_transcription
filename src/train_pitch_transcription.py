@@ -1,3 +1,5 @@
+import argparse
+
 from matplotlib import pyplot as plt
 import random 
 
@@ -50,12 +52,16 @@ def load_pitch_labels(file_path):
     pitch_midi[pitch_midi=='C-1+0'] = 'NA'
     return pitch_midi
 
-def load_data(files):
+def load_data(dataset_dir, label_dir):
     '''
      - Load the data into train, val, test based on artist names
      - Extract audio into 1024-length frames with hop size 10ms
      - Annotation: one element corresponding to one audio file
     '''
+
+    files = os.listdir(dataset_dir)
+    num_files = len(files)
+    num_classes = 410
     
     data = {'train': [],
            'val': [],
@@ -69,7 +75,7 @@ def load_data(files):
         print(f"reading {file_id}")
         file_artist = file_id.split('_')[0]
         split = get_split_by_artist(file_artist, train_artists, val_artists, test_artists)
-        waveform, sample_rate = torchaudio.load(f"MIR-1K/MIR-1K/Wavfile/{file_id}")
+        waveform, sample_rate = torchaudio.load(f"{dataset_dir}/{file_id}")
         vocals = waveform[1]
         # print(vocals)
     
@@ -80,7 +86,7 @@ def load_data(files):
         num_frames=len(frames)
         # print(num_frames)
     
-        pitch_midi_labels = load_pitch_labels(f"MIR-1K/MIR-1K/PitchLabel/{file_id.split('.')[0]}.pv")
+        pitch_midi_labels = load_pitch_labels(f"{label_dir}/{file_id.split('.')[0]}.pv")
         # print(pitch_midi_labels)
         annotation_matrix = pitch_to_frame(pitch_midi_labels, num_frames=num_frames, num_pitches=num_classes)
         # print(annotation_matrix.sum())
@@ -186,13 +192,54 @@ def train(model, train_loader, valid_loader, criterion, optimizer, num_epochs, s
                 print('Saving best model')
                 torch.save(model.state_dict(), saved_model)
 
+
 if __name__ == "__main__":
+    # Initialize parser
+    parser = argparse.ArgumentParser(description="Train CREPE model on MIR-1K dataset")
+    parser.add_argument(
+        '--dataset_dir',
+        type=str,
+        default="MIR-1K/MIR-1K/Wavfile",
+        help='Directory of the dataset to be used, containing .wav files.',
+        required=False
+    )
+    parser.add_argument(
+        '--label_dir',
+        type=str,
+        default="MIR-1K/MIR-1K/PitchLabel",
+        help='Directory of vocal pitch labels.',
+        required=False,
+    )
+    parser.add_argument(
+        '--split_dir',
+        type=str,
+        default="audio/split_vocals",
+        help='Directory to save the split audio files.',
+        required=False,
+    )
+    parser.add_argument(
+        '--results_dir',
+        type=str,
+        default="metrics",
+        help='Directory to save the evaluation results.',
+        required=False,
+    )
+    parser.add_argument(
+        '--huggingface_model',
+        type=str,
+        default="omgitsqing/CREPE_MIR-1K_16",
+        help='Huggingface model name to save the model to.',
+        required=False,
+    )
+    args = parser.parse_args()
+
     # use GPU if available, otherwise, use cpu
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     
-    files = os.listdir('MIR-1K/MIR-1K/Wavfile')
-    num_files = len(files)
-    num_classes = 410
+    # files = os.listdir('MIR-1K/MIR-1K/Wavfile')
+    # files = os.listdir(args.dataset_dir)
+    # num_files = len(files)
+    # num_classes = 410
     
     # '''
     #  - Load the data into train, val, test based on artist names
@@ -229,7 +276,7 @@ if __name__ == "__main__":
     #     # print(annotation_matrix.sum())
     #     labels[split].append(annotation_matrix)
 
-    data, labels =load_data(files)
+    data, labels = load_data(args.dataset_dir, args.label_dir)
 
     
     # data = torch.cat(data_lst)
@@ -278,4 +325,12 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=0.0002)
     train(model, train_loader, valid_loader, criterion, optimizer, num_epochs, saved_model, evaluate_every_n_epochs)
 
+    if args.huggingface_model:
+        model.push_to_hub("omgitsqing/CREPE_MIR-1K_16")
+
     print(metrics)
+
+    # Save all results in json file
+    with open(f"{args.results_dir}/pitch_transcription_results.json", "w") as f:
+        json.dump(metrics, f)
+        print(f"Saved evaluation results to: {args.results_dir}/{args.dataset}/pitch_transcription_results.json")

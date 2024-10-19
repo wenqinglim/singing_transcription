@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as nnF
+from huggingface_hub import PyTorchModelHubMixin
+
 
 '''
 Each convolutional layer is
@@ -20,7 +22,13 @@ class PrintLayer(nn.Module):
         print(x.shape)
         return x
 
-class CREPEModel(nn.Module):
+class CREPEModel(
+    nn.Module,
+    PyTorchModelHubMixin,
+    repo_url="omgitsqing/CREPE_MIR-1K_16",
+    pipeline_tag="audio source separation",
+    license="mit",
+    ):
     """The CREPE model"""
     def __init__(self, mult=4):
         super(CREPEModel, self).__init__()
