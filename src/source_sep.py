@@ -77,7 +77,6 @@ def load_and_mix_vocals(dataset_dir, dataset, target_sr=8000, num_voices=2, samp
     test_files = [file for file in files for artist in artists[dataset] if artist in file]
     test_pairs = [pair for pair in itertools.combinations(test_files,2) if pair[0].split('_')[0] != pair[1].split('_')[0]]
 
-    # paired_folder = "paired_vocals/test"
     num_pairs = len(test_pairs)
     print(f"There are {num_pairs} audio pairs in the {dataset} set.")
     num_samples = sample_len*target_sr
@@ -85,7 +84,6 @@ def load_and_mix_vocals(dataset_dir, dataset, target_sr=8000, num_voices=2, samp
     separated_lst = []
     
     for i, pair in tqdm(enumerate(test_pairs)):
-        # print(f"Processing pair {pair}")
         
         file1_name = pair[0].split('.')[0]
         file2_name = pair[1].split('.')[0]
@@ -99,14 +97,13 @@ def load_and_mix_vocals(dataset_dir, dataset, target_sr=8000, num_voices=2, samp
                               )
         
         dim2 = mixed.shape[1]//num_samples
-        # print(mixed.shape, separated.shape)
+
         mixed = torch.reshape(input=mixed[:, :dim2*num_samples], shape=(dim2, 1, num_samples))
         
         sep1 = separated[:, :dim2*num_samples][0].reshape(dim2, 1, num_samples)
         sep2 = separated[:, :dim2*num_samples][1].reshape(dim2, 1, num_samples)
         separated = torch.cat([sep1, sep2], dim=1)
-        # separated = torch.reshape(input=separated[:, :dim2*num_samples], shape=(dim2, num_voices, num_samples))
-        # print(mixed.shape, separated.shape)
+
         mixed_lst.append(mixed)
         separated_lst.append(separated)
         
@@ -144,7 +141,7 @@ def evaluate(model, X_test, y_test, idx, split_dir=None):
         # for sample in pred:
         torchaudio.save(f'{split_dir}/pred_{idx}_1.wav', F.normalize(pred[0][:1, :]), 8000)
         torchaudio.save(f'{split_dir}/pred_{idx}_2.wav', F.normalize(pred[0][1:, :]), 8000)
-        torchaudio.save(f'{split_dir}/mixed_{idx}.wav', F.normalize(stacked[:1]), 8000)
+        torchaudio.save(f'{split_dir}/mixed_{idx}.wav', F.normalize(X_test[0]), 8000)
     
     sisnr, sdr = get_metrics(pred, y_test)
     sisnr_orig, sdr_orig = get_metrics(stacked, y_test)
@@ -197,14 +194,6 @@ if __name__ == "__main__":
     # use GPU if available, otherwise, use cpu
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     
-    # files = os.listdir(args.dataset_dir)
-    # num_files = len(files)
-    
-    # test_files = [file for file in files for artist in test_artists if artist in file]
-    # test_pairs = [pair for pair in itertools.combinations(test_files,2) if pair[0].split('_')[0] != pair[1].split('_')[0]]
-    # print(f"There are {len(test_pairs)} audio pairs in the test set.")
-    
-    # random.seed(47)
     sample_len=3
     mixed, sep = load_and_mix_vocals(
         dataset_dir=args.dataset_dir,
@@ -214,7 +203,6 @@ if __name__ == "__main__":
         sample_len=sample_len, 
         paired_folder=f"{args.paired_dir}/{args.dataset}"
         )
-    # mixed, sep = load_and_mix_vocals(random.sample(test_pairs, 100), target_sr=8000, num_voices=2, sample_len=sample_len)
 
     print(f"There are {len(mixed)} mixed samples of length {sample_len}s in the {args.dataset} set.")
     
@@ -230,21 +218,9 @@ if __name__ == "__main__":
     with torch.no_grad():
         for idx, (batch_inputs, batch_labels) in enumerate(tqdm(test_dl)):
             batch_inputs, batch_labels = batch_inputs.to(device), batch_labels.to(device)
-            # print(batch_inputs.shape)
-            # print(batch_labels.shape)
-    # random.seed(47)
-    # print(random.sample(test_pairs, 12))
-    # with torch.no_grad():
-            # for pair in random.sample(test_pairs, 12):
-                # model = CONVTASNET_BASE_LIBRI2MIX.get_model()
-                # model = model.to(device)
-                # print(f"Initialized CONVTASNET_BASE_LIBRI2MIX model.")
-                # mixed, sep = load_and_mix_vocals([pair], target_sr=8000, num_voices=2, sample_len=sample_len)
-                # batch_inputs, batch_labels = mixed.to(device), sep.to(device)
+
             sisnri, sdri = evaluate(model, batch_inputs, batch_labels, idx, split_dir=f"{args.split_dir}/{args.dataset}")
-            # sisnr = sisnr.detach().cpu()
-            # sdr = sdr.detach().cpu()
-            # print(sisnr, sdr)
+
             torch.cuda.empty_cache()
             sisnris.append(sisnri)
             sdris.append(sdri)
