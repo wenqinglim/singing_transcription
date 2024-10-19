@@ -3,7 +3,15 @@
 ## Set Up:
 1. Install dependencies using Poetry: `poetry install`
 2. Download the dataset MIR-1K
-3. Run scripts `poetry run src/xyz.py`
+
+## Running
+### Source Separation Evaluation
+`poetry run src/source_sep.py`
+
+### Pitch Transcription
+`poetry run src/pitch_transcription.py`
+
+
 
 
 ## File Descriptions:
