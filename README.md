@@ -1,6 +1,6 @@
 # Two-vocal Separation and Singing Pitch Transcription
-[Coming Soon...] [![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm-dark.svg)](https://huggingface.co/spaces/omgitsqing/karaoke-chaos)
 
+Interact with the full pipeline on HF Spaces! [![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm-dark.svg)](https://huggingface.co/spaces/omgitsqing/karaoke-chaos)
 
 ## Set Up:
 1. Install dependencies using Poetry: `poetry install`
@@ -18,8 +18,6 @@ Trained models on Hugging Face:
 
 To run training pipeline:
 `poetry run src/train_pitch_transcription.py`
-
-
 
 
 ## File Descriptions:
@@ -47,6 +45,6 @@ Others:
 - [x] Get intermediate audio samples for writeup post
 - [ ] Create e2e pipeline
 - [x] Host model(s) on HF
-- [ ] Add gradio on HF Spaces hehe
+- [x] Add gradio on HF Spaces hehe
 
 
