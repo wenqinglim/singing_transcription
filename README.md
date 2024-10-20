@@ -44,9 +44,9 @@ Others:
 - [x] Setup Poetry
 - [x] Move from notebook to script
 - [ ] Test individual scripts in `src/`
-- [ ] Get intermediate audio samples for writeup post
+- [x] Get intermediate audio samples for writeup post
 - [ ] Create e2e pipeline
-- [ ] Host model(s) on HF
+- [x] Host model(s) on HF
 - [ ] Add gradio on HF Spaces hehe
 
 
