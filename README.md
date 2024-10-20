@@ -1,4 +1,6 @@
 # Two-vocal Separation and Singing Pitch Transcription
+[Coming Soon...] [![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/resolve/main/open-in-hf-spaces-sm-dark.svg)](https://huggingface.co/spaces/omgitsqing/karaoke-chaos)
+
 
 ## Set Up:
 1. Install dependencies using Poetry: `poetry install`
