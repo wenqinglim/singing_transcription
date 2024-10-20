@@ -2,13 +2,19 @@
 
 ## Set Up:
 1. Install dependencies using Poetry: `poetry install`
-2. Download the dataset MIR-1K
+2. Download the dataset [MIR-1K](https://zenodo.org/records/3532216)
 
 ## Running
 ### Source Separation Evaluation
 `poetry run src/source_sep.py`
 
 ### Pitch Transcription
+Trained models on Hugging Face:
+- CREPE-16: [![CREPE-16 Model on HF](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm-dark.svg)](https://huggingface.co/omgitsqing/CREPE_MIR-1K_16)
+- CREPE-24: [![CREPE-24 Model on HF](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm-dark.svg)](https://huggingface.co/omgitsqing/CREPE_MIR-1K_24)
+- CREPE-32: [![CREPE-32 Model on HF](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm-dark.svg)](https://huggingface.co/omgitsqing/CREPE_MIR-1K_32)
+
+To run training pipeline:
 `poetry run src/train_pitch_transcription.py`
 
 

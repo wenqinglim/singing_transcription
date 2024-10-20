@@ -25,8 +25,8 @@ class PrintLayer(nn.Module):
 class CREPEModel(
     nn.Module,
     PyTorchModelHubMixin,
-    repo_url="omgitsqing/CREPE_MIR-1K_16",
-    pipeline_tag="audio source separation",
+    repo_url="omgitsqing/CREPE_MIR-1K",
+    pipeline_tag="transcription, pitch detection",
     license="mit",
     ):
     """The CREPE model"""
